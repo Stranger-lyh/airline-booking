@@ -1,7 +1,7 @@
 from django.db import models
 # 账号信息
 class Account(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.CharField(max_length=64,primary_key=True)
     secret = models.CharField(max_length=64)
 
 # 顾客信息
@@ -25,7 +25,7 @@ class Vip(models.Model):
 
 # 管理员信息
 class Admin(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.CharField(max_length=64,primary_key=True)
     secret = models.CharField(max_length=64)
     name = models.CharField(max_length=64)
 
@@ -44,19 +44,22 @@ class Route(models.Model):
 # 型号信息
 class PlaneType(models.Model):
     id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=64)
     capacity = models.IntegerField()
     voyage = models.IntegerField()
-
-# 飞机信息
-class Plane(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type_id = models.ForeignKey("PlaneType",on_delete=models.CASCADE)
-    work_time = models.IntegerField()
 
 # 航空公司信息
 class Company(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=64)
+
+# 飞机信息
+class Plane(models.Model):
+    id = models.IntegerField(primary_key=True)
+    type_id = models.ForeignKey("PlaneType",on_delete=models.CASCADE)
+    company_id = models.ForeignKey("Company",on_delete=models.CASCADE)
+    work_time = models.IntegerField()
+
 
 # 航班信息
 class Flight(models.Model):
@@ -66,6 +69,7 @@ class Flight(models.Model):
     company_id = models.ForeignKey("Company",on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     arrive_time = models.DateTimeField()
+    ticketNum = models.IntegerField()
 
 # 机票信息
 class Ticket(models.Model):
