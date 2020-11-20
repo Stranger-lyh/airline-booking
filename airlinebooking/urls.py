@@ -30,6 +30,6 @@ urlpatterns = [
     path('addPlane/',views.addPlane),
     path('addAdmin/',views.addAdmin),
     path('addFlight/',views.addFlight),
-    path('addTicket/',views.addTicket),
+    #path('addTicket/',views.addTicket),
     path('addVip/',views.addVip)
 ]
