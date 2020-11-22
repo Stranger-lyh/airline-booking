@@ -66,28 +66,29 @@ class Flight(models.Model):
     id = models.IntegerField(primary_key=True)
     route_id = models.ForeignKey("Route",on_delete=models.CASCADE)
     plane_id = models.ForeignKey("Plane",on_delete=models.CASCADE)
-    company_id = models.ForeignKey("Company",on_delete=models.CASCADE)
+    price = models.IntegerField()
     start_time = models.DateTimeField()
     arrive_time = models.DateTimeField()
     ticketNum = models.IntegerField()
-
+""""
 # 机票信息
 class Ticket(models.Model):
     id = models.IntegerField(primary_key=True)
     flight_id = models.ForeignKey("Flight",on_delete=models.CASCADE)
     price = models.FloatField()
     status = models.CharField(max_length=64)
+"""
 
 # 账单信息
 class Bill(models.Model):
     id = models.IntegerField(primary_key=True)
     customer_id = models.ForeignKey("Customer",on_delete=models.CASCADE)
-    ticket_id = models.ForeignKey("Ticket",on_delete=models.CASCADE)
+    flight_id = models.ForeignKey("Flight",on_delete=models.CASCADE)
     price = models.FloatField()
 
 
 # 托运信息:
-class Consign:
+class Consign(models.Model):
     id = models.IntegerField(primary_key=True)
     customer_id = models.ForeignKey("Customer",on_delete=models.CASCADE)
     fligth_id = models.ForeignKey("Flight",on_delete=models.CASCADE)

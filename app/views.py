@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import render,HttpResponse
+from django.http import HttpResponse,JsonResponse
 import json
 
 # Create your views here.
 from app import models
 def addPort(request):
-    '''
     test1 = models.Airport(name="双流国际机场",place="成都")
     test1.save()
     t = models.Airport(name="首都国际机场",place="北京")
@@ -13,10 +13,12 @@ def addPort(request):
     t = models.Airport(name="浦东国际机场",place="上海")
     t.save()
     t = models.Airport(name="白云国际机场",place="广州")
+    t.save()
     '''
     body = json.loads(request.body.decode('utf-8'))
     t = models.Airport(name=body['airport'], place=body['place'])
     t.save()
+    '''
     return HttpResponse("<p>数据添加成功！</p>")
 
 # 添加航空公司信息
@@ -90,19 +92,81 @@ def addFlight(request):
     cnt = 150
     start_time = "2020-10-1 14:00:00"
     end_time = "2020-10-1 16:00:00"
-    t = models.Flight(route_id=route_obj,plane_id=plane_obj,company_id=company_obj,start_time=start_time,
+    t = models.Flight(route_id=route_obj,plane_id=plane_obj,price=800,start_time=start_time,
                       arrive_time = end_time,ticketNum=cnt)
     t.save()
     return HttpResponse("<p>数据添加成功！</p>")
 
+'''''
 def addTicket(request):
     flight_obj = models.Flight.objects.get(id=1)
     models.Ticket.objects.create(flight_id=flight_obj,price=800,status="未被售出")
     return HttpResponse("<p>数据添加成功！</p>")
-
+'''''
 def addVip(request):
     t_obj = models.Customer.objects.get(id=1)
     l_obj = models.VipLevel.objects.get(level_id=2)
     models.Vip.objects.create(customer_id=t_obj,level_id=l_obj)
     return HttpResponse("<p>数据添加成功！</p>")
 
+# 查询操作
+def queryCompany(request):
+    if request.method == "GET":
+        ret = models.Company.objects.all()
+        json_list = []
+        for i in ret:
+            json_dict = {}
+            json_dict["id"] = i.id
+            json_dict["name"] = i.name
+
+            json_list.append(json_dict)
+        ret1 = json.dumps(json_list)
+        return HttpResponse(ret1,content_type="application/json")
+
+def queryAccount(request):
+    if request.method == "GET":
+        ret = models.Account.objects.all()
+        json_list = []
+        for i in ret:
+            json_dict = {}
+            json_dict["id"] = i.id
+            json_dict["secret"] = i.secret
+
+            json_list.append(json_dict)
+        ret1 = json.dumps(json_list)
+        return HttpResponse(ret1, content_type="application/json")
+
+def queryAdmin(request):
+    if request.method == "GET":
+        ret = models.Admin.objects.all()
+        json_list = []
+        for i in ret:
+            json_dict = {}
+            json_dict["id"] = i.id
+            json_dict["name"] = i.name
+            json_dict["secret"] = i.secret
+            json_list.append(json_dict)
+        ret1 = json.dumps(json_list)
+        return HttpResponse(ret1, content_type="application/json")
+
+def queryFlight(request):
+    if request.method == "GET":
+        ret = models.Flight.objects.all()
+        json_list = []
+        for i in ret:
+            json_dict = {}
+            json_dict["id"] = i.id
+            json_dict["startPortName"] = i.route_id.startPort_id.name;
+            json_dict["startPorPlace"] = i.route_id.startPort_id.place;
+            json_dict["arrivePortName"] = i.route_id.arrivePort_id.name;
+            json_dict["arrivePortPlace"] = i.route_id.arrivePort_id.place;
+            json_dict["price"] = i.price
+            json_dict["startTime"] = i.start_time.strftime("%Y-%m-%d %H:%M:%S");
+            json_dict["arriveTime"] = i.arrive_time.strftime("%Y-%m-%d %H:%M:%S");
+            json_dict["Typename"] = i.plane_id.type_id.name;
+            json_dict["Capacity"] = i.plane_id.type_id.capacity;
+            json_dict["MaxVoyage"] = i.plane_id.type_id.voyage;
+            json_dict["leftTicket"] = i.ticketNum;
+            json_list.append(json_dict)
+        ret1 = json.dumps(json_list)
+        return HttpResponse(ret1, content_type="application/json")

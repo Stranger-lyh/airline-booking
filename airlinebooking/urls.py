@@ -19,6 +19,13 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # 查询操作
+    path('queryCompany/', views.queryCompany),
+    path('queryAccount/', views.queryAccount),
+    path('queryAdmin/', views.queryAdmin),
+    path('queryFlight/', views.queryFlight),
+]
+"""""
 # 初始添加数据
     path('addPort/',views.addPort),
     path('addCompany',views.addCompany),
@@ -31,5 +38,5 @@ urlpatterns = [
     path('addAdmin/',views.addAdmin),
     path('addFlight/',views.addFlight),
     path('addTicket/',views.addTicket),
-    path('addVip/',views.addVip)
-]
+    path('addVip/',views.addVip),
+"""""
