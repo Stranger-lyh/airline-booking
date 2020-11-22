@@ -160,6 +160,7 @@ def queryFlight(request):
             json_dict["startPorPlace"] = i.route_id.startPort_id.place;
             json_dict["arrivePortName"] = i.route_id.arrivePort_id.name;
             json_dict["arrivePortPlace"] = i.route_id.arrivePort_id.place;
+            json_dict["companyName"] = i.plane_id.company_id.name;
             json_dict["price"] = i.price
             json_dict["startTime"] = i.start_time.strftime("%Y-%m-%d %H:%M:%S");
             json_dict["arriveTime"] = i.arrive_time.strftime("%Y-%m-%d %H:%M:%S");
