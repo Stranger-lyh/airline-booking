@@ -19,11 +19,25 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # 查询操作
-    path('queryCompany/', views.queryCompany),
-    path('queryAccount/', views.queryAccount),
+
+    path('queryAllCompany/', views.Company.queryAllCompany),#查询航空公司
+    path('queryAccount/', views.queryAccount),#查询账户
     path('queryAdmin/', views.queryAdmin),
-    path('queryFlight/', views.queryFlight),
+    path('queryAllFlight/', views.Flight.queryAllFlight), #查询航班
+    path('addCompany/', views.Company.addCompany), #添加航空公司
+    path('deleteCompany/', views.Company.deleteCompany), #删除航空公司
+    path('queryAllAirport/', views.Airport.queryAllAirport), #查询所有机场
+    path('queryAirport/', views.Airport.queryAirport), #查询机场
+    path('addAirport/', views.Airport.addAirport), #添加机场
+    path('deleteAirport/', views.Airport.deleteAirport), #删除机场
+    path('queryAllPlaneType/', views.PlaneType.queryAllPlaneType), #查询所有飞机型号
+    path('queryPlaneType/', views.PlaneType.queryPlaneType), #查询指定飞机型号
+    path('addPlaneType/', views.PlaneType.addPlaneType), #添加飞机型号
+    path('deletePlaneType/', views.PlaneType.deletePlaneType), #删除飞机型号
+    path('addRoute/', views.Route.addRoute), #添加新航线
+    path('deleteRoute/', views.Route.deleteRoute), #删除航线
+    path('addFlight/', views.Flight.addFlight), #添加航班
+    path('deleteFlight/', views.Flight.deleteFlight), #删除航班
 ]
 """""
 # 初始添加数据

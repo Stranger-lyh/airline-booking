@@ -109,20 +109,6 @@ def addVip(request):
     models.Vip.objects.create(customer_id=t_obj,level_id=l_obj)
     return HttpResponse("<p>数据添加成功！</p>")
 
-# 查询操作
-def queryCompany(request):
-    if request.method == "GET":
-        ret = models.Company.objects.all()
-        json_list = []
-        for i in ret:
-            json_dict = {}
-            json_dict["id"] = i.id
-            json_dict["name"] = i.name
-
-            json_list.append(json_dict)
-        ret1 = json.dumps(json_list)
-        return HttpResponse(ret1,content_type="application/json")
-
 def queryAccount(request):
     if request.method == "GET":
         ret = models.Account.objects.all()
@@ -149,25 +135,159 @@ def queryAdmin(request):
         ret1 = json.dumps(json_list)
         return HttpResponse(ret1, content_type="application/json")
 
-def queryFlight(request):
-    if request.method == "GET":
-        ret = models.Flight.objects.all()
-        json_list = []
-        for i in ret:
+
+# 航空公司
+class Company:
+    # 查询操作
+    def queryAllCompany(request):
+        if request.method == "GET":
+            ret = models.Company.objects.all()
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["id"] = i.id
+                json_dict["name"] = i.name
+
+                json_list.append(json_dict)
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1,content_type="application/json")
+    # 添加操作
+    def addCompany(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Company.objects.create(name=body['name'])
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def deleteCompany(request):
+        if request.method == "DELETE":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Company.objects.filter(id = body['id']).delete()
+            return HttpResponse("<p>数据删除成功！</p>")
+
+# 机场
+class Airport:
+    # 查询操作
+    def queryAllAirport(request):
+        if request.method == "GET":
+            ret = models.Airport.objects.all()
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["id"] = i.id
+                json_dict["name"] = i.name
+                json_dict["place"] = i.place
+                json_list.append(json_dict)
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def queryAirport(request):
+        if request.method == "GET":
             json_dict = {}
-            json_dict["id"] = i.id
-            json_dict["startPortName"] = i.route_id.startPort_id.name;
-            json_dict["startPorPlace"] = i.route_id.startPort_id.place;
-            json_dict["arrivePortName"] = i.route_id.arrivePort_id.name;
-            json_dict["arrivePortPlace"] = i.route_id.arrivePort_id.place;
-            json_dict["companyName"] = i.plane_id.company_id.name;
-            json_dict["price"] = i.price
-            json_dict["startTime"] = i.start_time.strftime("%Y-%m-%d %H:%M:%S");
-            json_dict["arriveTime"] = i.arrive_time.strftime("%Y-%m-%d %H:%M:%S");
-            json_dict["Typename"] = i.plane_id.type_id.name;
-            json_dict["Capacity"] = i.plane_id.type_id.capacity;
-            json_dict["MaxVoyage"] = i.plane_id.type_id.voyage;
-            json_dict["leftTicket"] = i.ticketNum;
-            json_list.append(json_dict)
-        ret1 = json.dumps(json_list)
-        return HttpResponse(ret1, content_type="application/json")
+            json_dict["name"] = models.Airport.objects.get(id = request.GET.get("id")).name
+            json_dict["place"] = models.Airport.objects.get(id = request.GET.get("id")).place
+            ret1 = json.dumps(json_dict)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def addAirport(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Airport.objects.create(name=body['name'],place=body['place'])
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def deleteAirport(request):
+        if request.method == "DELETE":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Airport.objects.filter(id = body['id']).delete()
+            return HttpResponse("<p>数据删除成功！</p>")
+
+# 飞机型号
+class PlaneType:
+    def queryAllPlaneType(request):
+        if request.method == "GET":
+            ret = models.PlaneType.objects.all()
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["id"] = i.id
+                json_dict["name"] = i.name
+                json_dict["capacity"] = i.capacity
+                json_dict["voyage"] = i.voyage
+                json_list.append(json_dict)
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def queryPlaneType(request):
+        if request.method == "GET":
+            json_dict = {}
+            json_dict["name"] = models.PlaneType.objects.get(id = request.GET.get("id")).name
+            json_dict["capacity"] = models.PlaneType.objects.get(id = request.GET.get("id")).capacity
+            json_dict["voyage"] = models.PlaneType.objects.get(id = request.GET.get("id")).voyage
+            ret1 = json.dumps(json_dict)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def addPlaneType(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            models.PlaneType.objects.create(name=body['name'], capacity=body['capacity'],voyage = body['voyage'])
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def deletePlaneType(request):
+        if request.method == "DELETE":
+            body = json.loads(request.body.decode('utf-8'))
+            models.PlaneType.objects.filter(id=body['id']).delete()
+            return HttpResponse("<p>数据删除成功！</p>")
+
+class Route:
+    def addRoute(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Route.objects.create(startPort_id=models.Airport.objects.get(id=body["id1"]), arrivePort_id=models.Airport.objects.get(id=body["id2"]))
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def deleteRoute(request):
+        if request.method == "DELETE":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Route.objects.filter(id=body['id']).delete()
+            return HttpResponse("<p>数据删除成功！</p>")
+
+# 航班
+class Flight:
+    def queryAllFlight(request):
+        if request.method == "GET":
+            ret = models.Flight.objects.all()
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["id"] = i.id
+                json_dict["startPortName"] = i.route_id.startPort_id.name;
+                json_dict["startPorPlace"] = i.route_id.startPort_id.place;
+                json_dict["arrivePortName"] = i.route_id.arrivePort_id.name;
+                json_dict["arrivePortPlace"] = i.route_id.arrivePort_id.place;
+                json_dict["companyName"] = i.plane_id.company_id.name;
+                json_dict["price"] = i.price
+                json_dict["startTime"] = i.start_time.strftime("%Y-%m-%d %H:%M:%S");
+                json_dict["arriveTime"] = i.arrive_time.strftime("%Y-%m-%d %H:%M:%S");
+                json_dict["Typename"] = i.plane_id.type_id.name;
+                json_dict["Capacity"] = i.plane_id.type_id.capacity;
+                json_dict["MaxVoyage"] = i.plane_id.type_id.voyage;
+                json_dict["leftTicket"] = i.ticketNum;
+                json_list.append(json_dict)
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def addFlight(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Flight.objects.create(route_id=models.Route.objects.get(id=body["route_id"]),
+                                        plane_id=models.Plane.objects.get(id=body["plane_id"]),
+                                         price=body["price"],
+                                         start_time=body["time1"],
+                                         arrive_time=body["time2"],
+                                         ticketNum=body["num"])
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def deleteFlight(request):
+        if request.method == "DELETE":
+            body = json.loads(request.body.decode('utf-8'))
+            models.Flight.objects.filter(id=body['id']).delete()
+            return HttpResponse("<p>数据删除成功！</p>")

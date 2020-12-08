@@ -78,18 +78,17 @@ class Ticket(models.Model):
     price = models.FloatField()
     status = models.CharField(max_length=64)
 """
-
-# 账单信息
-class Bill(models.Model):
-    id = models.IntegerField(primary_key=True)
-    customer_id = models.ForeignKey("Customer",on_delete=models.CASCADE)
-    flight_id = models.ForeignKey("Flight",on_delete=models.CASCADE)
-    price = models.FloatField()
-
-
 # 托运信息:
 class Consign(models.Model):
     id = models.IntegerField(primary_key=True)
     customer_id = models.ForeignKey("Customer",on_delete=models.CASCADE)
     fligth_id = models.ForeignKey("Flight",on_delete=models.CASCADE)
     weight = models.FloatField()
+
+# 账单信息
+class Bill(models.Model):
+    id = models.IntegerField(primary_key=True)
+    customer_id = models.ForeignKey("Customer",on_delete=models.CASCADE)
+    #flight_id = models.ForeignKey("Flight",on_delete=models.CASCADE)
+    consign_id = models.ForeignKey("Consign",on_delete=models.CASCADE)
+    price = models.FloatField()
