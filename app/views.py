@@ -155,8 +155,11 @@ class Company:
     def addCompany(request):
         if request.method == "POST":
             body = json.loads(request.body.decode('utf-8'))
-            models.Company.objects.create(name=body['name'])
-            return HttpResponse("<p>数据添加成功！</p>")
+            if models.Company.objects.filter(name=body['name']):
+                return HttpResponse("name已存在！",status=400)
+            else:
+                models.Company.objects.create(name=body['name'])
+                return HttpResponse("<p>数据添加成功！</p>")
 
     def deleteCompany(request):
         if request.method == "DELETE":
@@ -191,8 +194,11 @@ class Airport:
     def addAirport(request):
         if request.method == "POST":
             body = json.loads(request.body.decode('utf-8'))
-            models.Airport.objects.create(name=body['name'],place=body['place'])
-            return HttpResponse("<p>数据添加成功！</p>")
+            if models.Airport.objects.filter(name=body['name']):
+                return HttpResponse("name已存在！",status=400)
+            else:
+                models.Airport.objects.create(name=body['name'],place=body['place'])
+                return HttpResponse("<p>数据添加成功！</p>")
 
     def deleteAirport(request):
         if request.method == "DELETE":
@@ -228,8 +234,11 @@ class PlaneType:
     def addPlaneType(request):
         if request.method == "POST":
             body = json.loads(request.body.decode('utf-8'))
-            models.PlaneType.objects.create(name=body['name'], capacity=body['capacity'],voyage = body['voyage'])
-            return HttpResponse("<p>数据添加成功！</p>")
+            if models.PlaneType.objects.filter(name=body['name']):
+                return HttpResponse("name已存在！",status=400)
+            else:
+                models.PlaneType.objects.create(name=body['name'], capacity=body['capacity'],voyage = body['voyage'])
+                return HttpResponse("<p>数据添加成功！</p>")
 
     def deletePlaneType(request):
         if request.method == "DELETE":
