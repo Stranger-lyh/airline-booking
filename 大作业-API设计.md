@@ -54,11 +54,11 @@ DELETE: 删除飞机		{id}
 
 GET: 查询所有飞机		{} -> {id,type, company, work_time}
 
-| method | url  | effect       |
-| ------ | ---- | ------------ |
-| GET    |      | 查询所有飞机 |
-| POST   |      | 添加航空公司 |
-| DELETE |      | 删除航空公司 |
+| method | url            | effect       |
+| ------ | -------------- | ------------ |
+| GET    | queryAllPlane/ | 查询所有飞机 |
+| POST   | addPlane/      | 添加飞机     |
+| DELETE | deletePlane/   | 删除飞机     |
 
 ### 航线信息
 
@@ -68,11 +68,11 @@ DELETE:删除航线
 
 GET:查询所有航线信息 
 
-| method | url          | effect           |
-| ------ | ------------ | ---------------- |
-| GET    |              | 查询所有航线信息 |
-| POST   | addRoute/    | 添加航线信息     |
-| DELETE | deleteRoute/ | 删除航线信息     |
+| method | url            | effect           |
+| ------ | -------------- | ---------------- |
+| GET    | queryAllRoute/ | 查询所有航线信息 |
+| POST   | addRoute/      | 添加航线信息     |
+| DELETE | deleteRoute/   | 删除航线信息     |
 
 ### 航班信息
 
@@ -96,4 +96,4 @@ DELETE: 删除航班
 | ------ | ------------- | -------------- |
 | GET    | queryAccount/ | 查询用户账户   |
 | GET    | queryAdmin/   | 查询管理员账户 |
-| POST   |               | 创建账户       |
+| POST   | addAccount/   | 创建账户       |

@@ -21,8 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('queryAllCompany/', views.Company.queryAllCompany),#查询航空公司
-    path('queryAccount/', views.queryAccount),#查询账户
-    path('queryAdmin/', views.queryAdmin),
+    path('queryAccount/', views.Account.queryAccount),#查询账户
+    path('queryAdmin/', views.Account.queryAdmin),
     path('queryAllFlight/', views.Flight.queryAllFlight), #查询航班
     path('addCompany/', views.Company.addCompany), #添加航空公司
     path('deleteCompany/', views.Company.deleteCompany), #删除航空公司
@@ -38,6 +38,11 @@ urlpatterns = [
     path('deleteRoute/', views.Route.deleteRoute), #删除航线
     path('addFlight/', views.Flight.addFlight), #添加航班
     path('deleteFlight/', views.Flight.deleteFlight), #删除航班
+    path('addAccount/', views.Account.addAccount), #添加账户
+    path('queryAllRoute/', views.Route.queryAllRoute), #查询所有航线
+    path('queryAllPlane/',views.Plane.queryAllPlane), #查询所有飞机
+    path('addPlane/',views.Plane.addPlane), #添加飞机
+    path('deletePlane/',views.Plane.deletePlane), #删除飞机
 ]
 """""
 # 初始添加数据
