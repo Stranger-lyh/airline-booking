@@ -294,12 +294,19 @@ class Flight:
 class Account:
     def queryAccount(request):
         if request.method == "GET":
-            ret = models.Account.objects.all()
+            ret = models.Customer.objects.all()
             json_list = []
             for i in ret:
                 json_dict = {}
-                json_dict["id"] = i.id
-                json_dict["secret"] = i.secret
+                json_dict["accountid"] = i.acount_id.id
+                json_dict["secret"] = i.acount_id.secret
+                json_dict["customerid"] = i.id
+                json_dict["name"] = i.name
+                json_dict["telnum"] = i.tel_num
+                json_dict["balance"] = i.balance
+                json_dict["levelid"] = models.Vip.objects.get(customer_id=i).level_id.level_id
+                json_dict["levelname"] = models.Vip.objects.get(customer_id=i).level_id.name
+                json_dict["discount"] = models.Vip.objects.get(customer_id=i).level_id.discount
 
                 json_list.append(json_dict)
             ret1 = json.dumps(json_list)
@@ -321,10 +328,13 @@ class Account:
     def addAccount(request):
         if request.method == "POST":
             body = json.loads(request.body.decode('utf-8'))
-            if models.Account.objects.filter(id=body['id']):
+            if models.Account.objects.filter(id=body['accountid']):
                 return HttpResponse("id已存在！",status=400)
             else:
-                models.Account.objects.create(id=body['id'], secret=body['secret'])
+                models.Account.objects.create(id=body['accountid'], secret=body['secret'])
+                models.Customer.objects.create(id=body["customerid"],name=body["name"],tel_num=body["telnum"],acount_id=models.Account.objects.get(id=body['accountid']),balance=body["balance"])
+                models.Vip.objects.create(customer_id=models.Customer.objects.get(id=body["customerid"]),level_id=models.VipLevel.objects.get(level_id=body["levelid"]))
+
                 return HttpResponse("<p>数据添加成功！</p>")
 
 class Plane:

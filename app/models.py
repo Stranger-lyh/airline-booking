@@ -10,6 +10,7 @@ class Customer(models.Model):
     acount_id = models.ForeignKey("Account",on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     tel_num = models.IntegerField()
+    balance = models.IntegerField()
 
 # 会员等级信息
 class VipLevel(models.Model):
