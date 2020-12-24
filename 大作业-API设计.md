@@ -104,3 +104,4 @@ DELETE: 删除航班
 | ------ | ------------- | ---------------- |
 | GET    | queryAllBill/ | 查询所有账单信息 |
 | POST   | addBill/      | 添加账单         |
+| POST   | estimateBill/ | 统计每日流水额   |

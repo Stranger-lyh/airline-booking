@@ -45,6 +45,7 @@ urlpatterns = [
     path('deletePlane/',views.Plane.deletePlane), #删除飞机
     path('addBill/',views.Bill.addBill), #添加账单
     path('queryAllBill/',views.Bill.queryBill), #查询账单
+    path('estimateBill/',views.Bill.estimateBill), #统计
 ]
 """""
 # 初始添加数据

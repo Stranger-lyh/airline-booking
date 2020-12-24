@@ -278,6 +278,8 @@ class Flight:
     def addFlight(request):
         if request.method == "POST":
             body = json.loads(request.body.decode('utf-8'))
+            if body["time1"] > body["time2"]:
+                return HttpResponse("时间不符合要求!", status=400)
             models.Flight.objects.create(route_id=models.Route.objects.get(id=body["route_id"]),
                                         plane_id=models.Plane.objects.get(id=body["plane_id"]),
                                          price=body["price"],
@@ -333,6 +335,8 @@ class Account:
             if models.Account.objects.filter(id=body['accountid']):
                 return HttpResponse("id已存在！",status=400)
             else:
+                if body['secret'] == "":
+                    return HttpResponse("密码不能为空！", status=400)
                 models.Account.objects.create(id=body['accountid'], secret=body['secret'])
                 models.Customer.objects.create(id=body["customerid"],name=body["name"],tel_num=body["telnum"],acount_id=models.Account.objects.get(id=body['accountid']),balance=body["balance"])
                 models.Vip.objects.create(customer_id=models.Customer.objects.get(id=body["customerid"]),level_id=models.VipLevel.objects.get(level_id=body["levelid"]))
@@ -415,5 +419,34 @@ class Bill:
 
                 json_list.append(json_dict)
             json_list.sort(key=lambda x:x["starttime"])
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1, content_type="application/json")
+
+    def estimateBill(request):
+        if request.method == "GET":
+            ret = models.Bill.objects.all()
+            temp_list = []
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["price"] = i.price
+                json_dict["time"] = i.consign_id.fligth_id.start_time.strftime("%Y-%m-%d");
+
+                temp_list.append(json_dict)
+            temp_list.sort(key=lambda x:x["time"])
+            temp_dict = {"time":0,"price":0}
+            cnt = 0
+            for i in temp_list:
+                if temp_dict.get("time") and temp_dict["time"] == i["time"]:
+                    temp_dict["price"] = temp_dict["price"]  + i["price"]
+                else:
+                    if (cnt != 0):
+                        json_list.append(temp_dict)
+                    cnt = cnt + 1
+                    temp_dict = {"time":0,"price":0}
+                    temp_dict["time"] = i["time"]
+                    temp_dict["price"] = i["price"]
+            json_list.append(temp_dict)
+
             ret1 = json.dumps(json_list)
             return HttpResponse(ret1, content_type="application/json")
