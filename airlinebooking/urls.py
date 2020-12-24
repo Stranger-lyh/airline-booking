@@ -43,6 +43,8 @@ urlpatterns = [
     path('queryAllPlane/',views.Plane.queryAllPlane), #查询所有飞机
     path('addPlane/',views.Plane.addPlane), #添加飞机
     path('deletePlane/',views.Plane.deletePlane), #删除飞机
+    path('addBill/',views.Bill.addBill), #添加账单
+    path('queryAllBill/',views.Bill.queryBill), #查询账单
 ]
 """""
 # 初始添加数据

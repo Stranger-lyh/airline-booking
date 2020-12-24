@@ -97,3 +97,10 @@ DELETE: 删除航班
 | GET    | queryAccount/ | 查询用户账户   |
 | GET    | queryAdmin/   | 查询管理员账户 |
 | POST   | addAccount/   | 创建账户       |
+
+### 账单信息
+
+| method | url           | effect           |
+| ------ | ------------- | ---------------- |
+| GET    | queryAllBill/ | 查询所有账单信息 |
+| POST   | addBill/      | 添加账单         |

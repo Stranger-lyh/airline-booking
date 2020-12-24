@@ -227,6 +227,7 @@ class Route:
             json_list = []
             for i in ret:
                 json_dict = {}
+                json_dict["routeid"] = i.id
                 json_dict["id1"] = i.startPort_id.id
                 json_dict["name1"] = i.startPort_id.name
                 json_dict["id2"] = i.arrivePort_id.id
@@ -367,3 +368,50 @@ class Plane:
             body = json.loads(request.body.decode('utf-8'))
             models.Plane.objects.filter(id=body['id']).delete()
             return HttpResponse("<p>数据删除成功！</p>")
+
+class Bill:
+    def addBill(request):
+        if request.method == "POST":
+            body = json.loads(request.body.decode('utf-8'))
+            balance = models.Customer.objects.get(id=body["customerid"]).balance
+            viplevel = models.Vip.objects.get(customer_id_id=body["customerid"]).level_id.level_id
+            price = models.Flight.objects.get(id=body["flightid"]).price
+            ticketNum = models.Flight.objects.get(id=body["flightid"]).ticketNum
+            if (viplevel == 1):
+                price = price*0.7
+            elif viplevel == 2:
+                price = price*0.8
+            if (balance < price):
+                return HttpResponse("余额不足", status=400)
+            models.Flight.objects.filter(id=body["flightid"]).update(ticketNum=ticketNum-1)
+            models.Consign.objects.create(weight=body["weight"],customer_id=models.Customer.objects.get(id=body["customerid"]),fligth_id=models.Flight.objects.get(id=body["flightid"]))
+            t = models.Consign.objects.filter(weight=body["weight"],customer_id=models.Customer.objects.get(id=body["customerid"]),fligth_id=models.Flight.objects.get(id=body["flightid"]))[0]
+            models.Bill.objects.create(price=price,customer_id=models.Customer.objects.get(id=body["customerid"]),consign_id=t)
+            return HttpResponse("<p>数据添加成功！</p>")
+
+    def queryBill(request):
+        if request.method == "GET":
+            ret = models.Bill.objects.all()
+            json_list = []
+            for i in ret:
+                json_dict = {}
+                json_dict["id"] = i.id
+                json_dict["price"] = i.price
+                json_dict["starttime"] = i.consign_id.fligth_id.start_time.strftime("%Y-%m-%d %H:%M:%S");
+                json_dict["arrivetime"] = i.consign_id.fligth_id.arrive_time.strftime("%Y-%m-%d %H:%M:%S");
+                json_dict["weight"] = i.consign_id.weight
+                json_dict["customerid"] = i.customer_id.id
+                json_dict["customername"] = i.customer_id.name
+                json_dict["customertel"] = i.customer_id.tel_num
+                json_dict["flightid"] = i.consign_id.fligth_id.id
+                json_dict["planetype"] = i.consign_id.fligth_id.plane_id.type_id.name
+                json_dict["fromport"] = i.consign_id.fligth_id.route_id.startPort_id.name
+                json_dict["fromplace"] = i.consign_id.fligth_id.route_id.startPort_id.place
+                json_dict["toport"] = i.consign_id.fligth_id.route_id.arrivePort_id.name
+                json_dict["toplace"] = i.consign_id.fligth_id.route_id.arrivePort_id.place
+
+
+                json_list.append(json_dict)
+            json_list.sort(key=lambda x:x["starttime"])
+            ret1 = json.dumps(json_list)
+            return HttpResponse(ret1, content_type="application/json")
