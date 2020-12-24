@@ -271,7 +271,7 @@ class Flight:
                 json_dict["MaxVoyage"] = i.plane_id.type_id.voyage;
                 json_dict["leftTicket"] = i.ticketNum;
                 json_list.append(json_dict)
-            json_list.sort(key=lambda x:x["startPortName"])
+            json_list.sort(key=lambda x:x["startTime"])
             ret1 = json.dumps(json_list)
             return HttpResponse(ret1, content_type="application/json")
 
