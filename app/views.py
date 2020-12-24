@@ -384,6 +384,7 @@ class Bill:
                 price = price*0.8
             if (balance < price):
                 return HttpResponse("余额不足", status=400)
+            models.Customer.objects.filter(id=body["customerid"]).update(balance = balance - price)
             models.Flight.objects.filter(id=body["flightid"]).update(ticketNum=ticketNum-1)
             models.Consign.objects.create(weight=body["weight"],customer_id=models.Customer.objects.get(id=body["customerid"]),fligth_id=models.Flight.objects.get(id=body["flightid"]))
             t = models.Consign.objects.filter(weight=body["weight"],customer_id=models.Customer.objects.get(id=body["customerid"]),fligth_id=models.Flight.objects.get(id=body["flightid"]))[0]
